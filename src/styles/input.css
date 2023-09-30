@@ -1,44 +1,51 @@
-
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px;
+    background-color: #6f6f6f;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    margin: 20px;
+    gap:10px;
+  }
+  
 .delayed-input-container {
     font-family: Arial, sans-serif;
-    padding: 20px;
+    padding: 1.5em;
     display: flex;
     flex-direction: column;
     align-items: start;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     background-color: #333;
+    min-width: 45%;
+    border-radius: 20px;
   }
   
-  label {
-    margin-bottom:0;
+  label, .asset-menu, .borrow-amount, .readonly-textbox, .execute {
     font-size: 16px;
   }
   
-  .asset-menu {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #333;
+  label, .asset-menu, .readonly-textbox {
     margin-bottom: 0;
   }
   
   .content-editable {
-    padding: 10px;
+    padding: 1em;
     cursor: text;
     opacity: 0;
     color: transparent;
     outline: none;
     background-color: #242424;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 1em;
   }
   
   .borrow-amount {
     margin-top: 0;
     font-weight: bold;
-    font-size: 16px;
   }
   
   .amount-button-container {
@@ -46,19 +53,25 @@
     margin-left: 10px;
   }
   
-  .amt {
+  .amt, .execute {
     padding: 8px 12px;
     cursor: pointer;
-    background-color: #3498db;
-    color: #fff;
     border: none;
     border-radius: 5px;
     outline: none;
     transition: background-color 0.3s ease;
   }
+  .execute{
+    background-color: #727272;
+  }
   
-  .amt:hover {
-    background-color: #2980b9;
+  .amt {
+    background-color: #7f7f7f;
+    color: #fff;
+  }
+  
+  .amt:hover, .execute:hover {
+    background-color: #8e8f8f;
   }
   
   .readonly-textbox {
@@ -72,42 +85,18 @@
     width: 95%;
   }
   
-  .execute {
-    margin-top: 10px;
-    padding: 8px 16px;
-    cursor: pointer;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .execute:hover {
-    background-color: #2980b9;
-  }
 
-
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center; /* Center vertically */
-    padding: 20px;
-    background-color: #242424;
-    color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    margin: 20px;
-  }
-  
   .card-rev {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 10px;
-    background-color: #333; /* Adjust the color for the reversed text card */
+    background-color: #333;
     color: white;
-    border-radius: 5px;
+    border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    margin-top: 20px; /* Adjust the space from the top */
-    text-align: center; /* Center text horizontally */
+    text-align: center;
+    min-width: 45%;
+    height: 250px;
   }
