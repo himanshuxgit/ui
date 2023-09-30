@@ -1,0 +1,8 @@
+.navbar-container {
+    display: flex;
+  }
+  
+  button {
+    margin-right: 10px; /* Adjust the spacing between buttons */
+  }
+  
