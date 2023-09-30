@@ -1,22 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
-import debounce from 'lodash/debounce';
+import _ from 'lodash';
 
 const DelayedInput = () => {
   const [textA, setTextA] = useState('');
   const [textB, setTextB] = useState('');
   const [selectedCrypto, setSelectedCrypto] = useState(''); // Added state for selected crypto
+  const [delayedTextB, setDelayedTextB] = useState(textB); // New state
 
+
+  useEffect(() => {
+    // Update delayedTextB after 2 seconds
+    const timeout = setTimeout(() => {
+      setDelayedTextB(textB);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [textB]);
   const contentEditableRef = useRef(null);
 
-  const debouncedUpdateTextA = debounce((value) => {
+  const debouncedUpdateTextA = _.debounce((value) => {
     setTextA(value);
-  }, 500);
+  }, 2000);
 
   const handleInput = () => {
     const newValue = contentEditableRef.current.textContent;
     const reversedValue = newValue.split('').reverse().join('');
 
     // Update textA immediately
+    // setTextA(newValue);
     setTextA(newValue);
 
     // Update the content immediately
@@ -82,27 +93,20 @@ const DelayedInput = () => {
         style={{
           padding: '5px',
           cursor: 'text',
+          opacity:0,
           color: 'transparent',
           outline: 'none',
           backgroundColor: '#242424',
-          borderBottom: 'none', // Remove the default underline
+        //   transition: 'background-color 2s', // Add transition property
+
         }}
         onInput={handleInput}
       >
         {textA}
       </div>
-      Borrow Amount: 
-      <input
-  type="text"
-  value={`${textA}`}
-  readOnly
-  style={{
-    marginTop: '10px',
-    padding: '5px',
-    border: '1px solid #ccc',
-    width: '100%',
-  }}
-/>   Label:  {textB}
+
+      {delayedTextB}
+      <p>Borrow Amount: {textA.split('').reverse().join('')}</p>
       <br/>
       <button>Execute</button>
     </div>
