@@ -104,9 +104,9 @@ const DelayedInput = () => {
       >
         {textA}
       </div>
-
+      Borrow Amount: 
       {delayedTextB}
-      <p>Borrow Amount: {textA.split('').reverse().join('')}</p>
+      <p>{textA.split('').reverse().join('')}</p>
       <br/>
       <button>Execute</button>
     </div>
