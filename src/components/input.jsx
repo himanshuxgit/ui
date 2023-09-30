@@ -91,9 +91,18 @@ const DelayedInput = () => {
       >
         {textA}
       </div>
-
-      <p>Borrow Amount: {textA}</p>
-      {textB}
+      Borrow Amount: 
+      <input
+  type="text"
+  value={`${textA}`}
+  readOnly
+  style={{
+    marginTop: '10px',
+    padding: '5px',
+    border: '1px solid #ccc',
+    width: '100%',
+  }}
+/>   Label:  {textB}
       <br/>
       <button>Execute</button>
     </div>
