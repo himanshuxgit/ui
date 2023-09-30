@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
 
 const DelayedInput = () => {
   const [textA, setTextA] = useState('');
@@ -8,7 +8,7 @@ const DelayedInput = () => {
 
   const contentEditableRef = useRef(null);
 
-  const debouncedUpdateTextA = _.debounce((value) => {
+  const debouncedUpdateTextA = debounce((value) => {
     setTextA(value);
   }, 500);
 
