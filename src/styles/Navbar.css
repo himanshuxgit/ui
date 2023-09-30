@@ -1,8 +1,48 @@
 .navbar-container {
-    display: flex;
-  }
-  
-  button {
-    margin-right: 10px; /* Adjust the spacing between buttons */
-  }
-  
+  display: flex;
+}
+
+button {
+  margin-right: 0;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 10px;
+  height: 100%;
+  background-color: #3498db;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.open-button {
+  background-color: #545555;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.close-button {
+  background-color: #545555;
+}
+
+.reset-button {
+  background-color: #545555;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+button:hover {
+  background-color: #7c7b7b;
+}
+
+button:hover::after {
+  opacity: 1;
+}

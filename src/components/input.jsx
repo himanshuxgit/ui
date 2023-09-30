@@ -1,42 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import _ from 'lodash';
+import '../styles/input.css'; // Assuming you save the CSS styles in a file named DelayedInput.css
 
 const DelayedInput = () => {
   const [textA, setTextA] = useState('');
   const [textB, setTextB] = useState('');
-  const [selectedCrypto, setSelectedCrypto] = useState(''); // Added state for selected crypto
-  const [delayedTextB, setDelayedTextB] = useState(textB); // New state
-
-
-  useEffect(() => {
-    // Update delayedTextB after 2 seconds
-    const timeout = setTimeout(() => {
-      setDelayedTextB(textB);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, [textB]);
+  const [selectedCrypto, setSelectedCrypto] = useState('');
+  const [delayedTextB, setDelayedTextB] = useState(textB);
   const contentEditableRef = useRef(null);
 
   const debouncedUpdateTextA = _.debounce((value) => {
     setTextA(value);
   }, 2000);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDelayedTextB(textB);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, [textB]);
+
   const handleInput = () => {
     const newValue = contentEditableRef.current.textContent;
     const reversedValue = newValue.split('').reverse().join('');
 
-    // Update textA immediately
-    // setTextA(newValue);
     setTextA(newValue);
-
-    // Update the content immediately
     contentEditableRef.current.textContent = reversedValue;
-
-    // Debounced update for textA
     debouncedUpdateTextA(newValue);
-
-    // Instant update for textB with the reversed value
     setTextB(reversedValue);
   };
 
@@ -69,48 +60,49 @@ const DelayedInput = () => {
     }
   };
 
-  const handleClearInput = () => {
-    setTextA('');
-    setTextB('');
-    debouncedUpdateTextA.cancel();
-  };
-
   return (
-    <div>
-      {/* Dropdown for selecting crypto currencies */}
+    <div className="delayed-input-container">
       <label>
         Select Asset:
-        <select value={selectedCrypto} onChange={handleCurrencyChange}>
+        <select
+          value={selectedCrypto}
+          onChange={handleCurrencyChange}
+          className="asset-menu"
+        >
           <option value="BTC">Bitcoin</option>
           <option value="ETH">Ethereum</option>
           {/* Add more options for other crypto currencies */}
         </select>
       </label>
-
+  
       <div
         ref={contentEditableRef}
         contentEditable
-        style={{
-          padding: '5px',
-          cursor: 'text',
-          opacity:0,
-          color: 'transparent',
-          outline: 'none',
-          backgroundColor: '#242424',
-        //   transition: 'background-color 2s', // Add transition property
-
-        }}
+        className="content-editable"
         onInput={handleInput}
       >
         {textA}
       </div>
-      Borrow Amount: 
-      {delayedTextB}
+  
+      <p className="borrow-amount">
+        Borrow Money: <span className="amount-button-container"><button className='amt'>Max Held Amount: 200</button></span>
+      </p>
+  
+      <input
+        type="text"
+        value={delayedTextB}
+        readOnly
+        placeholder='Enter your value'
+        className="readonly-textbox"
+      />
+  
+  <div className="card-container">
       <p>{textA.split('').reverse().join('')}</p>
-      <br/>
-      <button>Execute</button>
+    </div>
+  
+      <br />
+      <button className='execute'>Execute</button>
     </div>
   );
-};
-
+  }
 export default DelayedInput;
