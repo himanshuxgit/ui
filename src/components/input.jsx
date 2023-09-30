@@ -1,23 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
+import _ from 'lodash';
 
-const App = () => {
-  const [content, setContent] = useState('');
+const DelayedInput = () => {
   const [textA, setTextA] = useState('');
   const [textB, setTextB] = useState('');
+  const [selectedCrypto, setSelectedCrypto] = useState(''); // Added state for selected crypto
 
   const contentEditableRef = useRef(null);
 
+  const debouncedUpdateTextA = _.debounce((value) => {
+    setTextA(value);
+  }, 500);
+
   const handleInput = () => {
-    const newValue = content;
+    const newValue = contentEditableRef.current.textContent;
     const reversedValue = newValue.split('').reverse().join('');
 
-    // Update textB immediately with the reversed value
-    setTextB(reversedValue);
+    // Update textA immediately
+    setTextA(newValue);
 
-    // Clear textA after a delay
-    setTimeout(() => {
-      setTextA('');
-    }, 500);
+    // Update the content immediately
+    contentEditableRef.current.textContent = reversedValue;
+
+    // Debounced update for textA
+    debouncedUpdateTextA(newValue);
+
+    // Instant update for textB with the reversed value
+    setTextB(reversedValue);
+  };
+
+  const handleCurrencyChange = (event) => {
+    setSelectedCrypto(event.target.value);
   };
 
   useEffect(() => {
@@ -25,6 +38,7 @@ const App = () => {
     document.body.addEventListener('keydown', handleKeyDown);
 
     return () => {
+      debouncedUpdateTextA.cancel();
       document.body.removeEventListener('click', handleClick);
       document.body.removeEventListener('keydown', handleKeyDown);
     };
@@ -37,63 +51,52 @@ const App = () => {
   const handleKeyDown = (event) => {
     if (event.key === 'Backspace' && contentEditableRef.current) {
       event.preventDefault();
-      const newValue = content.slice(0, -1);
-      setContent(newValue);
+      const currentValue = contentEditableRef.current.textContent;
+      const newValue = currentValue.slice(1);
+      contentEditableRef.current.textContent = newValue;
       handleInput();
     }
   };
 
   const handleClearInput = () => {
-    setContent('');
     setTextA('');
     setTextB('');
+    debouncedUpdateTextA.cancel();
   };
 
   return (
     <div>
+      {/* Dropdown for selecting crypto currencies */}
+      <label>
+        Select Asset:
+        <select value={selectedCrypto} onChange={handleCurrencyChange}>
+          <option value="BTC">Bitcoin</option>
+          <option value="ETH">Ethereum</option>
+          {/* Add more options for other crypto currencies */}
+        </select>
+      </label>
+
       <div
         ref={contentEditableRef}
         contentEditable
         style={{
-          border: '1px solid #ccc',
           padding: '5px',
           cursor: 'text',
+          color: 'transparent',
           outline: 'none',
-          backgroundColor: 'white',
+          backgroundColor: '#242424'
         }}
-        onInput={(e) => setContent(e.currentTarget.textContent)}
+        onInput={handleInput}
       >
-        {textB}
+        {textA}
       </div>
 
-      <p>Instant Display (textB): {textB}</p>
-
-      <div
-        style={{
-          border: '1px solid #ccc',
-          padding: '5px',
-          margin: '10px 0',
-        }}
-      >
-        {textA ? (
-          <input
-            type="text"
-            value={textA}
-            readOnly
-            style={{
-              border: 'none',
-              outline: 'none',
-              width: '100%',
-            }}
-          />
-        ) : (
-          <div style={{ color: '#aaa' }}>Enter your amount</div>
-        )}
-      </div>
-
-      <button onClick={handleClearInput}>Clear Input</button>
+      <p>Borrow Amount: {textA}</p>
+      {textB}
+      <br/>
+      <button>Execute</button>
     </div>
   );
 };
 
-export default App;
+export default DelayedInput;
