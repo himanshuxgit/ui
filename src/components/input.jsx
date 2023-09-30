@@ -84,7 +84,8 @@ const DelayedInput = () => {
           cursor: 'text',
           color: 'transparent',
           outline: 'none',
-          backgroundColor: '#242424'
+          backgroundColor: '#242424',
+          borderBottom: 'none', // Remove the default underline
         }}
         onInput={handleInput}
       >
