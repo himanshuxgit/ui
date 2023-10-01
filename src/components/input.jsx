@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import _ from 'lodash';
-import '../styles/input.css'; // Assuming you save the CSS styles in a file named DelayedInput.css
+import '../styles/input.css'; 
 
 const DelayedInput = () => {
   const [textA, setTextA] = useState('');
   const [textB, setTextB] = useState('');
   const [selectedCrypto, setSelectedCrypto] = useState('');
   const [delayedTextB, setDelayedTextB] = useState(textB);
+  const [isValid, setIsValid] = useState(true);
   const contentEditableRef = useRef(null);
 
   const debouncedUpdateTextA = _.debounce((value) => {
@@ -20,15 +21,26 @@ const DelayedInput = () => {
 
     return () => clearTimeout(timeout);
   }, [textB]);
-
   const handleInput = () => {
     const newValue = contentEditableRef.current.textContent;
-    const reversedValue = newValue.split('').reverse().join('');
-
-    setTextA(newValue);
-    contentEditableRef.current.textContent = reversedValue;
-    debouncedUpdateTextA(newValue);
-    setTextB(reversedValue);
+  
+    // Validation: Check if the new value is a valid number
+    const isValidInput = /^\d+$/.test(newValue) || newValue === '';
+  
+    if (isValidInput) {
+      setIsValid(true); // Reset the isValid state
+      setTextA(newValue);
+      const reversedValue = newValue.split('').reverse().join('');
+      contentEditableRef.current.textContent = reversedValue;
+      debouncedUpdateTextA(newValue);
+      setTextB(reversedValue);
+    } else {
+      setIsValid(false);
+  
+      setTimeout(() => {
+        setIsValid(true); // Reset the isValid state after showing the message
+      }, 1000);
+    }
   };
 
   const handleCurrencyChange = (event) => {
@@ -51,12 +63,23 @@ const DelayedInput = () => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Backspace' && contentEditableRef.current) {
+    const key = event.key;
+  
+    if (key === 'Backspace' && contentEditableRef.current) {
       event.preventDefault();
       const currentValue = contentEditableRef.current.textContent;
-      const newValue = currentValue.slice(1);
-      contentEditableRef.current.textContent = newValue;
+      const newValue = currentValue.slice(0, -1);
+      contentEditableRef.current.textContent = ''; 
       handleInput();
+      contentEditableRef.current.textContent = newValue; 
+    } else if (key !== 'Backspace' && !/^\d+$/.test(key) && key !== '.' && !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey) {
+      setIsValid(false);
+  
+      setTimeout(() => {
+        setIsValid(true);
+      }, 1000);
+  
+      event.preventDefault();
     }
   };
 
@@ -75,20 +98,19 @@ const DelayedInput = () => {
             {/* Add more options for other crypto currencies */}
           </select>
         </label>
-  
+
         <div
           ref={contentEditableRef}
           contentEditable
-          className="content-editable"
+          className={`content-editable ${isValid ? '' : 'invalid'}`}
           onInput={handleInput}
         >
           {textA}
         </div>
-  
         <p className="borrow-amount">
           Borrow Money: <span className="amount-button-container"><button className='amt'>Max Held Amount: 200</button></span>
         </p>
-  
+
         <input
           type="text"
           value={delayedTextB}
@@ -96,18 +118,19 @@ const DelayedInput = () => {
           placeholder='Enter your value'
           className="readonly-textbox"
         />
-                <br />
+        <br />
+       <div className='exec'>
         <button className='execute'>Execute</button>
-      </div>
-  
-        {/* Add the card for the reversed text */}
-        <div className="card-rev">
-          <p>{textA.split('').reverse().join('')}</p>
+        {isValid ? null : <p className="invalid-message">Invalid Input</p>}
         </div>
-  
+      </div>
 
+      {/* Add the card for the reversed text */}
+      <div className="card-rev">
+        <p>{textA.split('').reverse().join('')}</p>
+      </div>
     </div>
   );
-  
-  }
+}
+
 export default DelayedInput;
