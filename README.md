@@ -1,1 +1,1 @@
-Deployed at: https://main--uid-assgn.netlify.app/
+Deployed at: https://uid-assgn.netlify.app/
