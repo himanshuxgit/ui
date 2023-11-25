@@ -8,7 +8,7 @@ Features
 -Responsive UI design
 
 Deployment  
--The project is live at uid-assgn.netlify.app.
+-The project is live at https://uid-assgn.netlify.app
 
 Built with React.js  
 
